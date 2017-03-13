@@ -1,12 +1,12 @@
-# SmartState
-Smart state container with easy copy and auto memoized getters
+# StateWare
+Smart state container with easy copy/update and auto memoized getters
 
 ## Install it
-`npm install smartstate --save`
+`npm install stateware --save`
 
 ## Use it
 ```js
-import { createState } from 'smartstate';
+import { createState } from 'stateware';
 
 const initialState = createState({
   users        : [],

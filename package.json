@@ -1,5 +1,5 @@
 {
-  "name": "smartstate",
+  "name": "stateware",
   "version": "1.0.0",
   "description": "Smart state container with easy copy and auto memoized getters",
   "main": "./lib/createState.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wellguimaraes/smartstate.git"
+    "url": "git+https://github.com/wellguimaraes/stateware.git"
   },
   "keywords": [
     "state",
@@ -20,9 +20,9 @@
   "author": "Wellington Guimaraes",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/wellguimaraes/smartstate/issues"
+    "url": "https://github.com/wellguimaraes/stateware/issues"
   },
-  "homepage": "https://github.com/wellguimaraes/smartstate#readme",
+  "homepage": "https://github.com/wellguimaraes/stateware#readme",
   "dependencies": {
     "lodash.flattendeep": "^4.4.0",
     "lodash.memoize": "^4.1.2"
