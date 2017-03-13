@@ -1,10 +1,10 @@
 # SmartState
 Smart state container with easy copy and auto memoized getters
 
-### Install it
+## Install it
 `npm install smartstate --save`
 
-### Use it
+## Use it
 ```js
 import { createState } from 'smartstate';
 
@@ -41,7 +41,7 @@ console.log(newState.totalPosts);
 
 ```
 
-#### Using with Redux
+### Using with Redux
 
 Instead of:
 ```js
