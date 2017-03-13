@@ -1,5 +1,5 @@
 # StateWare
-Smart state container with easy copy/update and auto memoized getters
+Smart state container with easy copy/update and auto memoized getters.
 
 ## Install it
 `npm install stateware --save`
@@ -12,12 +12,14 @@ const initialState = createState({
   users        : [],
   genderFilter : null,
   
-  // Will be recalculated when 'users' or 'genderFilter' is updated
+  // Define memoized getters
+
+  // 'filteredUsers' will update when 'users' or 'genderFilter' is updated
   filteredUsers(users, genderFilter) {
     return users.filter(user => !genderFilter || user.gender === genderFilter);
   },
   
-  // Will be recalculated when 'filteredUsers' is updated
+  // 'totalPosts' will update when 'filteredUsers' is updated
   totalPosts(filteredUsers) { 
     return filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
   }
