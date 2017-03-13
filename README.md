@@ -41,7 +41,7 @@ console.log(newState.totalPosts);
 
 ```
 
-##### Using with Redux
+#### Using with Redux
 
 Instead of:
 ```js
