@@ -1,0 +1,38 @@
+{
+  "name": "smartstate",
+  "version": "1.0.0",
+  "description": "Smart state container with easy copy and auto memoized getters",
+  "main": "./lib/createState.js",
+  "scripts": {
+    "build": "./node_modules/.bin/babel src -d lib",
+    "test": "node ./node_modules/mocha/bin/mocha test/**/*.test.js --compilers js:babel-register --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wellguimaraes/smartstate.git"
+  },
+  "keywords": [
+    "state",
+    "container",
+    "getters",
+    "memoize"
+  ],
+  "author": "Wellington Guimaraes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wellguimaraes/smartstate/issues"
+  },
+  "homepage": "https://github.com/wellguimaraes/smartstate#readme",
+  "dependencies": {
+    "lodash.flattendeep": "^4.4.0",
+    "lodash.memoize": "^4.1.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "babel-register": "^6.24.0",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
+}
