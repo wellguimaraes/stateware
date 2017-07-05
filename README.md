@@ -25,9 +25,9 @@ const initialState = createState({
   }
 });
 
-// Create a new state, updating 'cities' value
+// Create a new state, updating 'users' value
 const newState = initialState.copy({
-  cities: [
+  users: [
     { name: 'John Doe'     , gender: 'M', postsCount: 10 },
     { name: 'Jane Doe'     , gender: 'F', postsCount: 5 },
     { name: 'Alan Turing'  , gender: 'M', postsCount: 15 },
@@ -43,7 +43,17 @@ console.log(newState.totalPosts);
 
 ```
 
-### Using with Redux
+### Usage with Redux
+
+Do something like:
+```js
+switch (action.type) {
+  case 'SET_GENDER_FILTER':
+    return state.copy({
+      genderFilter: action.payload
+    });
+}
+```
 
 Instead of:
 ```js
@@ -57,14 +67,3 @@ switch (action.type) {
     }
 }
 ```
-
-Do something like:
-```js
-switch (action.type) {
-  case 'SET_GENDER_FILTER':
-    return state.copy({
-      genderFilter: action.payload
-    });
-}
-```
-
