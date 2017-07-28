@@ -67,3 +67,23 @@ switch (action.type) {
     }
 }
 ```
+
+### UglifyJS & mangling
+If you're using UglifyJS with mangling, function parameters will get renamed and Stateware 
+won't be able to identify a getter dependencies.
+You can avoid this problem by using `createGetter` function this way:
+
+```js
+import { createState, createGetter } from 'stateware';
+
+const initialState = createState({
+  users        : [],
+  genderFilter : null,
+  
+  filteredUsers: createGetter(['users', 'genderFilter'], (users, genderFilter) => {
+    return users.filter(user => !genderFilter || user.gender === genderFilter);
+  })
+})
+```
+
+Yep, it's lil verbose, but we can minify things safely.
