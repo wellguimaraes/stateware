@@ -1,5 +1,6 @@
 import { expect } from 'chai';
-import { createState } from '../src/createState';
+import createState from '../src/createState';
+import createGetter from '../src/createGetter';
 
 describe('createState', () => {
 
@@ -8,7 +9,7 @@ describe('createState', () => {
       alpha  : 1,
       bravo  : 2,
       charlie: 3,
-      delta  : (alpha, bravo) => alpha + bravo,
+      delta  : createGetter(['alpha', 'bravo'], (alpha, bravo) => alpha + bravo),
       echo   : (delta, charlie) => delta + charlie
     };
 

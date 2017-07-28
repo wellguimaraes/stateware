@@ -1,7 +1,7 @@
 import getDependencies  from './getDependencies';
 import getKeyInjector   from './getKeyInjector';
 
-export function createState(shape, prevState) {
+export default function createState(shape, prevState) {
 
   const stateContainer = {};
 
