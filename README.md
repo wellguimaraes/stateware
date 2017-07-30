@@ -9,8 +9,8 @@ Smart state container with easy copy/update and auto memoized getters.
 import { createState } from 'stateware';
 
 const initialState = createState({
-  users        : [],
-  genderFilter : null,
+  users: [],
+  genderFilter: null,
   
   // Define memoized getters
 
@@ -71,17 +71,22 @@ switch (action.type) {
 ### UglifyJS & mangling
 If you're using UglifyJS with mangling, function parameters will get renamed and Stateware 
 won't be able to identify a getter dependencies.
-You can avoid this problem by using `createGetter` function this way:
+You can avoid this problem by using `getter` decorator or `createGetter` function in this fashion:
 
 ```js
-import { createState, createGetter } from 'stateware';
+import { createState, createGetter, getter } from 'stateware';
 
 const initialState = createState({
-  users        : [],
-  genderFilter : null,
+  users: [],
+  genderFilter: null,
   
-  filteredUsers: createGetter(['users', 'genderFilter'], (users, genderFilter) => {
-    return users.filter(user => !genderFilter || user.gender === genderFilter);
+  @getter('users', 'genderFilter')
+  filteredUsers() {
+    return this.users.filter(user => !this.genderFilter || user.gender === this.genderFilter);
+  },
+  
+  totalPosts: createGetter(['filteredUsers'], function() { // Don't use arrow function here, otherwise the context can't be injected
+    return this.filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
   })
 })
 ```
