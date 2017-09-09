@@ -21,6 +21,4 @@ describe('getKeyInjector', () => {
     expect(someFn.updatedBy.c).equals(true)
     expect(someFn.updatedBy.b).not.equals(true)
   })
-
-  it ('')
 })
