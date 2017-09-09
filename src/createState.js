@@ -3,12 +3,11 @@ import getKeyInjector from './getKeyInjector'
 export default function createState(newValues, prevValues) {
 
   const newStateContainer = {}
-  const proxyStateContainer = {}
 
   if (prevValues)
     Object.keys(prevValues)
       .filter(key => !newValues.hasOwnProperty(key))
-      .forEach(getKeyInjector(newStateContainer, proxyStateContainer, prevValues, newValues))
+      .forEach(getKeyInjector(newStateContainer, prevValues, newValues))
   else
     Object.keys(newValues)
       .filter(key => typeof newValues[ key ] === 'function')
@@ -17,7 +16,7 @@ export default function createState(newValues, prevValues) {
       })
 
   Object.keys(newValues)
-    .forEach(getKeyInjector(newStateContainer, proxyStateContainer, newValues))
+    .forEach(getKeyInjector(newStateContainer, newValues))
 
   Object.defineProperty(newStateContainer, 'copy', {
     enumerable: false,

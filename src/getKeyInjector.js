@@ -35,7 +35,7 @@ export function getProxyContainer(fn, stateContainer) {
   }, {})
 }
 
-export default function getKeyInjector(newStateContainer, proxyStateContainer, source, newValues) {
+export default function getKeyInjector(newStateContainer, source, newValues) {
   return key => {
     if (typeof source[ key ] !== 'function') {
 
@@ -46,7 +46,7 @@ export default function getKeyInjector(newStateContainer, proxyStateContainer, s
       const getterKey = key.startsWith(fnPrefix) ? key.substr(fnPrefixLength) : key
       const functionKey = fnPrefix + getterKey
 
-      const getter = memoize(() => {
+      const getter = () => {
         const updatedBy = Object.keys(source[ key ].updatedBy)
         const shouldComputeValue =
           !newValues || (
@@ -63,7 +63,7 @@ export default function getKeyInjector(newStateContainer, proxyStateContainer, s
         } else {
           return source[ getterKey ]
         }
-      })
+      }
 
       Object.defineProperty(newStateContainer, functionKey, {
         enumerable: true,
@@ -73,7 +73,7 @@ export default function getKeyInjector(newStateContainer, proxyStateContainer, s
 
       Object.defineProperty(newStateContainer, getterKey, {
         enumerable: false,
-        get: getter
+        get: memoize(getter)
       })
     }
   }
