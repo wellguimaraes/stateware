@@ -1,8 +1,10 @@
 # StateWare
-Smart state container with easy copy/update and auto memoized getters.
+A dependency-free state container with easy copy and auto memoized getters
 
 ## Install it
-`npm install stateware --save`
+`npm i stateware --save`
+
+`yard add stateware`
 
 ## Use it
 ```js
@@ -15,13 +17,14 @@ const initialState = createState({
   // Define memoized getters
 
   // 'filteredUsers' will update when 'users' or 'genderFilter' is updated
-  filteredUsers(users, genderFilter) {
+  filteredUsers({ users, genderFilter }) {
     return users.filter(user => !genderFilter || user.gender === genderFilter);
   },
   
   // 'totalPosts' will update when 'filteredUsers' is updated
-  totalPosts(filteredUsers) { 
-    return filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
+  totalPosts() {
+    // you can use this.propName if you prefer
+    return this.filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
   }
 });
 
@@ -67,28 +70,3 @@ switch (action.type) {
     }
 }
 ```
-
-### UglifyJS & mangling
-If you're using UglifyJS with mangling, function parameters will get renamed and Stateware 
-won't be able to identify a getter dependencies.
-You can avoid this problem by using `getter` decorator or `createGetter` function in this fashion:
-
-```js
-import { createState, createGetter, getter } from 'stateware';
-
-const initialState = createState({
-  users: [],
-  genderFilter: null,
-  
-  @getter('users', 'genderFilter')
-  filteredUsers() {
-    return this.users.filter(user => !this.genderFilter || user.gender === this.genderFilter);
-  },
-  
-  totalPosts: createGetter(['filteredUsers'], function() { // Don't use arrow function here, otherwise the context can't be injected
-    return this.filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
-  })
-})
-```
-
-Yep, it's lil verbose, but we can minify things safely.

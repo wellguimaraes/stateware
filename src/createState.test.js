@@ -1,6 +1,5 @@
 import { expect } from 'chai'
 import createState from '../src/createState'
-import getter from '../src/getterDecorator'
 
 describe('createState', () => {
 
@@ -9,9 +8,12 @@ describe('createState', () => {
       alpha: 1,
       bravo: 2,
       charlie: 3,
-      echo: (delta, charlie) => delta + charlie,
 
-      @getter('alpha', 'bravo') delta() {
+      echo() {
+        return this.delta + this.charlie
+      },
+
+      delta() {
         return this.alpha + this.bravo
       }
     }
@@ -30,7 +32,9 @@ describe('createState', () => {
     const shape = {
       alpha: 1,
       bravo: 2,
-      charlie: (alpha, bravo) => alpha + bravo
+      charlie() {
+        return this.alpha + this.bravo
+      }
     }
 
     const firstState = createState(shape)
@@ -49,19 +53,20 @@ describe('createState', () => {
 
     const shape = {
       alpha: 1,
-      bravo: (alpha) => {
+      bravo() {
         bravoCalls++
-        return alpha
+        return this.alpha
       }
     }
 
     const firstState = createState(shape)
 
-    expect(firstState.bravo).to.equal(shape.alpha)
+    expect(firstState.bravo).to.equal(1)
     expect(bravoCalls).to.equal(1)
 
     const secondState = firstState.copy({ alpha: 2 })
 
+    expect(secondState.bravo).to.equal(2)
     expect(secondState.bravo).to.equal(2)
     expect(bravoCalls).to.equal(2)
   })
@@ -72,7 +77,7 @@ describe('createState', () => {
     const shape = {
       alpha: 1,
       bravo: 2,
-      charlie: (alpha) => {
+      charlie({ alpha }) {
         charlieCalls++
         return alpha
       }
@@ -80,9 +85,11 @@ describe('createState', () => {
 
     const firstState = createState(shape)
     const secondState = firstState.copy({ bravo: 5 })
+    const thirdState = secondState.copy({ bravo: 6, alpha: 1 })
 
     expect(firstState.charlie).to.equal(shape.alpha)
     expect(secondState.charlie).to.equal(shape.alpha)
+    expect(thirdState.charlie).to.equal(shape.alpha)
     expect(charlieCalls).to.equal(1)
   })
 
@@ -91,9 +98,9 @@ describe('createState', () => {
 
     const shape = {
       alpha: 1,
-      bravo: (alpha) => {
+      bravo() {
         bravoCalls++
-        return alpha
+        return this.alpha
       }
     }
 

@@ -1,28 +1,29 @@
-import getDependencies  from './getDependencies';
-import getKeyInjector   from './getKeyInjector';
+import getKeyInjector from './getKeyInjector'
 
-export default function createState(shape, prevState) {
+export default function createState(newValues, prevValues) {
 
-  const stateContainer = {};
+  const newStateContainer = {}
+  const proxyStateContainer = {}
 
-  if (prevState)
-    Object.keys(prevState)
-      .filter(key => !shape.hasOwnProperty(key))
-      .forEach(getKeyInjector(stateContainer, prevState, shape));
+  if (prevValues)
+    Object.keys(prevValues)
+      .filter(key => !newValues.hasOwnProperty(key))
+      .forEach(getKeyInjector(newStateContainer, proxyStateContainer, prevValues, newValues))
   else
-    Object.keys(shape)
-      .filter(key => typeof shape[ key ] === 'function')
+    Object.keys(newValues)
+      .filter(key => typeof newValues[ key ] === 'function')
       .forEach(key => {
-        shape[ key ].updatedBy = getDependencies(shape, key);
-      });
+        newValues[ key ].updatedBy = {}
+      })
 
-  Object.keys(shape).forEach(getKeyInjector(stateContainer, shape));
+  Object.keys(newValues)
+    .forEach(getKeyInjector(newStateContainer, proxyStateContainer, newValues))
 
-  Object.defineProperty(stateContainer, 'copy', {
+  Object.defineProperty(newStateContainer, 'copy', {
     enumerable: false,
-    writable  : false,
-    value     : (newValues = {}) => createState(newValues, stateContainer)
-  });
+    writable: false,
+    value: (newValues = {}) => createState(newValues, newStateContainer)
+  })
 
-  return stateContainer;
+  return newStateContainer
 }

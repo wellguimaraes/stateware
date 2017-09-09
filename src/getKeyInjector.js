@@ -1,43 +1,80 @@
-import memoize from 'lodash.memoize';
+const fnPrefix = '@@'
+const fnPrefixLength = fnPrefix.length
 
-export default function getKeyInjector(stateContainer, reference, newValues) {
+function memoize(fn) {
+  let value
+  let executed = false
+
+  return function () {
+    if (!executed) {
+      executed = true
+      value = fn.apply(this, arguments)
+    }
+
+    return value
+  }
+}
+
+export function getProxyContainer(fn, stateContainer) {
+  return Object.keys(stateContainer).reduce((acc, key) => {
+
+    const cleanKey = typeof stateContainer[ key ] === 'function'
+      ? key.substr(fnPrefixLength)
+      : key
+
+    Object.defineProperty(acc, cleanKey, {
+      enumerable: false,
+      get: memoize(() => {
+        fn.updatedBy[ cleanKey ] = true
+        return stateContainer[ cleanKey ]
+      })
+    })
+
+    return acc
+
+  }, {})
+}
+
+export default function getKeyInjector(newStateContainer, proxyStateContainer, source, newValues) {
   return key => {
-    if (typeof reference[ key ] !== 'function') {
+    if (typeof source[ key ] !== 'function') {
 
-      stateContainer[ key ] = reference[ key ];
+      newStateContainer[ key ] = source[ key ]
 
     } else {
 
-      const getterKey   = key.replace(/@@__fn_/g, '');
-      const functionKey = '@@__fn_' + getterKey;
-
-      const shouldReuseCache = (
-        newValues &&
-        reference[ functionKey ].updatedBy &&
-        reference[ functionKey ].updatedBy.every(key => !newValues.hasOwnProperty(key))
-      );
+      const getterKey = key.startsWith(fnPrefix) ? key.substr(fnPrefixLength) : key
+      const functionKey = fnPrefix + getterKey
 
       const getter = memoize(() => {
-          if (shouldReuseCache)
-            return reference[ getterKey ];
-          else {
-            const params = reference[ key ].paramNames.map(param => stateContainer[ param ]);
-            return reference[ key ].apply(stateContainer, params);
-          }
+        const updatedBy = Object.keys(source[ key ].updatedBy)
+        const shouldComputeValue =
+          !newValues || (
+            updatedBy.length === 0 ||
+            updatedBy.some(key =>
+              newValues.hasOwnProperty(key) &&
+              newValues[ key ] !== source[ key ]
+            )
+          )
+
+        if (shouldComputeValue) {
+          const proxyContainer = getProxyContainer(source[ key ], newStateContainer)
+          return source[ key ].call(proxyContainer, proxyContainer)
+        } else {
+          return source[ getterKey ]
         }
-      );
+      })
 
-      Object.defineProperty(stateContainer, functionKey, {
+      Object.defineProperty(newStateContainer, functionKey, {
         enumerable: true,
-        writable  : false,
-        value     : reference[ key ]
-      });
+        writable: false,
+        value: source[ key ]
+      })
 
-      Object.defineProperty(stateContainer, getterKey, {
+      Object.defineProperty(newStateContainer, getterKey, {
         enumerable: false,
-        get       : getter
-      });
-
+        get: getter
+      })
     }
   }
 }
