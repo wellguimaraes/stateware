@@ -14,16 +14,12 @@ const initialState = createState({
   users: [],
   genderFilter: null,
   
-  // Define memoized getters
-
-  // 'filteredUsers' will update when 'users' or 'genderFilter' is updated
   filteredUsers({ users, genderFilter }) {
     return users.filter(user => !genderFilter || user.gender === genderFilter);
   },
   
-  // 'totalPosts' will update when 'filteredUsers' is updated
   totalPosts() {
-    // you can use this.propName if you prefer
+    // you can use "this.propName" if you prefer
     return this.filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
   }
 });
@@ -48,7 +44,7 @@ console.log(newState.totalPosts);
 
 ### Usage with Redux
 
-Do something like:
+Do this:
 ```js
 switch (action.type) {
   case 'SET_GENDER_FILTER':
