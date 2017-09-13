@@ -1,7 +1,39 @@
 import { expect } from 'chai'
 import createState from '../src/createState'
+import { spy } from 'sinon'
 
 describe('createState', () => {
+
+  it('should compute getters only when required fields change', () => {
+    const deltaSpy = spy()
+    const echoSpy = spy()
+
+    const shape = {
+      alpha: 1,
+      bravo: 2,
+      charlie: 3,
+
+      delta({ alpha, bravo }) {
+        deltaSpy()
+        return alpha + bravo
+      },
+
+      echo({ delta, charlie }) {
+        echoSpy()
+        return delta + charlie
+      }
+    }
+
+    const first = createState(shape)
+    const second = first.copy({ alpha: 5 })
+    const third = second.copy({ charlie: 5 })
+
+    expect(first.echo).equals(6)
+    expect(second.echo).equals(10)
+    expect(third.echo).equals(12)
+    expect(deltaSpy.callCount).equals(2)
+    expect(echoSpy.callCount).equals(3)
+  })
 
   it('should create state with shape values and getters', () => {
     const shape = {

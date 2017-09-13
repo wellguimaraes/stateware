@@ -51,10 +51,7 @@ export default function getKeyInjector(newStateContainer, source, newValues) {
         const shouldComputeValue =
           !newValues || (
             updatedBy.length === 0 ||
-            updatedBy.some(key =>
-              newValues.hasOwnProperty(key) &&
-              newValues[ key ] !== source[ key ]
-            )
+            updatedBy.some(key => newStateContainer[ key ] !== source[ key ])
           )
 
         if (shouldComputeValue) {
