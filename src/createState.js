@@ -125,7 +125,13 @@ export function createCopier(numberOfGetters) {
 
 }
 
-function groupShapeElements(shape) {
+/**
+ * Group shape elements into initialState and getters
+ *
+ * @param shape
+ * @returns {*}
+ */
+export function groupShapeElements(shape) {
   return Object
     .keys(shape)
     .reduce((acc, it) => {
