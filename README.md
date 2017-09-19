@@ -2,7 +2,7 @@
 A fast, dependency-free state container with easy copy and automagically memoized getters, designed for immutability.
 
 ###### Extra power
-Wanna reduce Redux boilerplate? Use it combined with [Actionware](https://github.com/wellguimaraes/actionware).
+Wanna reduce Redux boilerplate? Use it combined with **[Actionware](https://github.com/wellguimaraes/actionware)** lib.
 
 ## Install it
 `npm i stateware --save`
