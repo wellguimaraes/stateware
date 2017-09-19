@@ -57,7 +57,7 @@ switch (action.type) {
 ```
 
 Instead of:
-```js
+```
 switch (action.type) {
   case 'SET_GENDER_FILTER':
     const filter = action.payload
