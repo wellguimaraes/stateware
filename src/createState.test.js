@@ -8,26 +8,28 @@ describe('createState', () => {
     const deltaSpy = spy()
     const echoSpy = spy()
 
-    const shape = {
-      alpha: 1,
-      bravo: 2,
-      charlie: 3,
+    const first = createState(
+      {
+        name: 'first',
+        alpha: 1,
+        bravo: 2,
+        charlie: 3,
+        delta({ alpha, bravo }) {
+          deltaSpy()
+          return alpha + bravo
+        },
 
-      delta({ alpha, bravo }) {
-        deltaSpy()
-        return alpha + bravo
-      },
-
-      echo({ delta, charlie }) {
-        echoSpy()
-        return delta + charlie
+        echo({ delta, charlie }) {
+          echoSpy()
+          return delta + charlie
+        }
       }
-    }
+    )
 
-    const first = createState(shape)
-    const second = first.copy({ alpha: 5 })
-    const third = second.copy({ charlie: 5 })
+    const second = first.copy({ alpha: 5, name: 'second' })
+    const third = second.copy({ charlie: 5, name: 'third' })
 
+    expect(first.delta).equals(3)
     expect(first.echo).equals(6)
     expect(second.echo).equals(10)
     expect(third.echo).equals(12)
@@ -61,15 +63,14 @@ describe('createState', () => {
 
   it('should copy state and change values partially', () => {
 
-    const shape = {
+    const firstState = createState({
       alpha: 1,
       bravo: 2,
+
       charlie() {
         return this.alpha + this.bravo
       }
-    }
-
-    const firstState = createState(shape)
+    })
     const secondState = firstState.copy({ alpha: 2 })
 
     expect(firstState.alpha).to.equal(1)

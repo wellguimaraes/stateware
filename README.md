@@ -1,5 +1,8 @@
-# StateWare
-A dependency-free state container with easy copy and auto memoized getters
+# ![Actionware](assets/logo.png)
+A fast, dependency-free state container with easy copy and automagically memoized getters, designed for immutability.
+
+###### Extra power
+Wanna reduce Redux boilerplate? Use it combined with [Actionware](https://github.com/wellguimaraes/actionware).
 
 ## Install it
 `npm i stateware --save`
@@ -8,7 +11,7 @@ A dependency-free state container with easy copy and auto memoized getters
 
 ## Use it
 ```js
-import { createState } from 'stateware';
+import { createState } from 'stateware'
 
 const initialState = createState({
   users: [],
@@ -18,11 +21,10 @@ const initialState = createState({
     return users.filter(user => !genderFilter || user.gender === genderFilter);
   },
   
-  totalPosts() {
-    // you can use "this.propName" if you prefer
-    return this.filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
+  totalPosts({ filteredUsers }) {
+    return filteredUsers.reduce((sum, user) => sum + user.postsCount, 0);
   }
-});
+})
 
 // Create a new state, updating 'users' value
 const newState = initialState.copy({
@@ -32,13 +34,13 @@ const newState = initialState.copy({
     { name: 'Alan Turing'  , gender: 'M', postsCount: 15 },
     { name: 'Ada Lovelace' , gender: 'F', postsCount: 16 }
   ]
-});
+})
 
 // Access state values
-console.log(newState.users);
-console.log(newState.genderFilter);
-console.log(newState.filteredUsers);
-console.log(newState.totalPosts);
+newState.users
+newState.genderFilter
+newState.filteredUsers
+newState.totalPosts
 
 ```
 
@@ -50,7 +52,7 @@ switch (action.type) {
   case 'SET_GENDER_FILTER':
     return state.copy({
       genderFilter: action.payload
-    });
+    })
 }
 ```
 
@@ -58,11 +60,15 @@ Instead of:
 ```js
 switch (action.type) {
   case 'SET_GENDER_FILTER':
-    const filter = action.payload;
+    const filter = action.payload
+    
     return {
       ...state,
       genderFilter: filter,
-      filteredUsers: ...
+      filteredUsers: state.users.filter(user => !filter || user.gender === filter)
     }
 }
 ```
+
+## License
+[MIT](LICENSE) &copy; Wellington Guimaraes
