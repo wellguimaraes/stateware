@@ -7,7 +7,7 @@ Wanna reduce Redux boilerplate? Use it combined with **[Actionware](https://gith
 ## Install it
 `npm i stateware --save`
 
-`yard add stateware`
+`yarn add stateware`
 
 ## Use it
 ```js
